@@ -1,0 +1,51 @@
+name: Deployment Workflow
+on: push
+jobs:
+  lint: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: action/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install depedencies
+        run: npm ci
+      - name: Run lint
+        run: npm lint
+  tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Get the code
+        uses: action/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install depedencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
+  build:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Get the code
+        uses: action/checkout@v3
+      - name: Install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install depedencies
+        run: npm ci
+      - name: Run build
+        run: npm buid
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to server
+        uses: echo "Deploy...."
+  
